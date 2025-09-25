@@ -1,0 +1,43 @@
+#include <iostream>
+#include <vector>
+using namespace std;
+
+//計算矩陣裡 <= mid 的數字有幾個 
+int countlessequal (vector < vector <int> > & matrix, int mid) {
+    int n = matrix.size();
+    int count = 0;
+    int row = n - 1; //從左下角開始
+    int column = 0;
+
+    while (row >= 0 && column < n) {
+        if (matrix[row][column] <= mid) {
+            count += row + 1;  //此列皆 <= mid
+            column++;  //右移
+        } else {
+            row--;  //太大需往上移
+        }
+    }
+    return count;
+
+}
+
+
+class Solution {
+    public:
+        int kthSmallest(vector < vector <int> > &matrix, int k) {
+            int n = matrix.size();
+            int left = matrix[0][0];  //最大值
+            int right = matrix[n - 1][n - 1];  //最小值
+
+            //二分搜尋
+            while (left < right) {
+                int mid = left + (right - left) / 2;
+                if (countlessequal (matrix, mid) < k) {
+                    left = mid + 1;  //太小往右找
+                } else {
+                    right = mid;  //夠多往左找
+                }
+            }
+            return left; //left = right時就是第k小
+        }
+};
